@@ -1,4 +1,8 @@
 import json
+import logging
+
+
+log = logging.getLogger(__name__)
 
 
 class EchoRequest(object):
@@ -8,6 +12,7 @@ class EchoRequest(object):
 
     def __init__(self, http_request):
         self.data = json.loads(http_request.body)
+        log.debug(self.data)
 
     @property
     def type(self):
@@ -16,3 +21,11 @@ class EchoRequest(object):
     @property
     def intent(self):
         return self.data['request']['intent']
+
+    @property
+    def session(self):
+        attributes = self.data['session'].get('attributes')
+        if attributes is None:
+            attributes = {}
+
+        return attributes

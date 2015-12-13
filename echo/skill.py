@@ -10,6 +10,9 @@ from .request import EchoRequest
 
 log = logging.getLogger(__name__)
 
+LAUNCH_NOT_IMPLEMENTED_ERROR = "'launch' is not implemented. Implement this handler in a base class."
+SESSION_ENDED_NOT_IMPLEMENTED_ERROR = "'session ended' is not implemented. Implement this handler in a base class."
+
 
 class EchoSkill(generic.View):
     @method_decorator(csrf_exempt)
@@ -25,15 +28,18 @@ class EchoSkill(generic.View):
         return handlers[self.request.type]()
 
     def launch(self):
-        pass
+        raise NotImplementedError(LAUNCH_NOT_IMPLEMENTED_ERROR)
+
+    def session_ended(self):
+        raise NotImplementedError(SESSION_ENDED_NOT_IMPLEMENTED_ERROR)
 
     def intent(self):
         requested_intent = self.request.intent
-        handler_name = self._get_intent_handler_name(requested_intent['name'])
-        return getattr(self, handler_name)(requested_intent.get('slots', {}))
+        handler_name = self.get_intent_handler_name(requested_intent['name'])
+        return getattr(self, handler_name)(
+            slots=requested_intent.get('slots', {}),
+            session=self.request.session
+        )
 
-    def _get_intent_handler_name(self, intent_name):
+    def get_intent_handler_name(self, intent_name):
         return re.sub('(?!^)([A-Z])', r'_\1', intent_name).lower()
-
-    def session_ended(self):
-        pass

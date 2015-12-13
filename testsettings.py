@@ -8,12 +8,12 @@ DATABASES = {
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
-    'hermes',
+    'echo',
 )
 
 SECRET_KEY = 'abcde12345'
 
 USE_TZ = True
 
-ROOT_URLCONF = 'hermes.urls'
+ROOT_URLCONF = 'echo.urls'
 MIDDLEWARE_CLASSES = ()
