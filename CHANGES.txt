@@ -1,0 +1,6 @@
+* 0.1.1
+ - Refactored response classes.
+ - Created full test suite.
+
+* 0.1.0
+ - Initial release.

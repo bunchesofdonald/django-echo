@@ -21,5 +21,5 @@ setup(
     name='django-echo',
     packages=find_packages(),
     url='https://github.com/bunchesofdonald/django-echo',
-    version='0.1.0',
+    version='0.1.1',
 )
