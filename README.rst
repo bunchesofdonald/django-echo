@@ -2,4 +2,4 @@
 django-echo
 =============
 
-Library for creating skills for Amazon's Echo
+Django library for creating skills for the Amazon Echo (Alexa)
