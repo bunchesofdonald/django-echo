@@ -1,10 +1,8 @@
-from echo.request import (
-    EchoRequest
-)
+from echo.request import EchoRequest
 from echo.tests import BaseEchoTestCase
 
 
-class TestEchoSkill(BaseEchoTestCase):
+class TestEchoRequest(BaseEchoTestCase):
     def test_launch_request_type(self):
         """EchoRequest should know when it's received a launch request"""
         expected = EchoRequest.LAUNCH_REQUEST

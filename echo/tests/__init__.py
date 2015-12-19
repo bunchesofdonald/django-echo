@@ -22,6 +22,20 @@ class BaseEchoTestCase(TestCase):
             "request": None
         }
 
+        self.base_response_data = {
+            "version": "1.0",
+            "response": {
+                "outputSpeech": {
+                    "type": "PlainText",
+                    "text": ""
+                },
+                "card": None,
+                "reprompt": None,
+                "shouldEndSession": False
+            },
+            "sessionAttributes": {}
+        }
+
         self.launch_request = {
             "type": "LaunchRequest",
             "requestId": "EdwRequestId.123",
