@@ -87,8 +87,3 @@ class BaseEchoTestCase(TestCase):
             request_data['session']['attributes'] = session
 
         return self._generate_request(request_data)
-
-    def _get_response_data(self, response_class, *args, **kwargs):
-        response = response_class(*args, **kwargs)
-        data = json.loads(response.content.decode())
-        return data
