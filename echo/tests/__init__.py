@@ -62,7 +62,6 @@ class BaseEchoTestCase(TestCase):
     def _generate_request(self, request_data):
         http_request = self.factory.post('/')
         http_request._body = json.dumps(request_data)
-        http_request._body = json.dumps(request_data)
         return http_request
 
     def _generate_launch_request(self):
