@@ -6,25 +6,22 @@ from django import http
 
 log = logging.getLogger(__name__)
 
+PLAIN_TEXT_OUTPUT = 'PlainText'
+
 
 class EchoResponse(http.HttpResponse):
-    PLAIN_TEXT_OUTPUT = 'PlainText'
-
-    def __init__(self, text, output_type, session, end_session, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         kwargs.setdefault('content_type', 'application/json;charset=UTF-8')
 
         response_body = {
             "version": "1.0",
             "response": {
-                "outputSpeech": {
-                    "type": output_type,
-                    "text": text
-                },
-                "card": None,
-                "reprompt": None,
-                "shouldEndSession": end_session
+                "outputSpeech": kwargs.pop('output_speech'),
+                "card": kwargs.pop('card', None),
+                "reprompt": kwargs.pop('reprompt', None),
+                "shouldEndSession": kwargs.pop('should_end_session', True)
             },
-            "sessionAttributes": session
+            "sessionAttributes": kwargs.pop('session', {})
         }
 
         log.debug(response_body)
@@ -32,15 +29,13 @@ class EchoResponse(http.HttpResponse):
         super(EchoResponse, self).__init__(content=data, **kwargs)
 
 
-class EchoSimplePlainTextResponse(EchoResponse):
-    def __init__(self, text, session=None, end_session=True, *args, **kwargs):
-        if session is None:
-            session = {}
+class EchoTextResponse(EchoResponse):
+    def __init__(self, text, session=None, should_end_session=True, *args, **kwargs):
+        output_speech = {"type": PLAIN_TEXT_OUTPUT, "text": text}
 
-        super(EchoSimplePlainTextResponse, self).__init__(
-            text=text,
-            output_type=EchoResponse.PLAIN_TEXT_OUTPUT,
-            end_session=end_session,
+        super(EchoTextResponse, self).__init__(
+            output_speech=output_speech,
+            should_end_session=should_end_session,
             session=session,
             **kwargs
         )
