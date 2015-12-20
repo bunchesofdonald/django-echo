@@ -35,6 +35,12 @@ class TestEchoResponse(BaseEchoTestCase):
         data = self._get_response_data("Some plain text content")
         assert data == expected
 
+    def test_correct_content_type(self):
+        """EchoResponse should have the correct content type"""
+        expected = ('Content-Type', 'application/json;charset=UTF-8')
+        response = EchoResponse('text')
+        assert response._headers['content-type'] == expected
+
     def test_populates_session(self):
         """EchoResponse should populate the session attributes"""
         expected = {'apple': 'red', 'orange': 'orange'}
