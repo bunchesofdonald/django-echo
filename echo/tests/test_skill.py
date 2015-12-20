@@ -22,12 +22,12 @@ class TestEchoSkill(BaseEchoTestCase):
             self.skill.dispatch(http_request)
 
     def test_routes_to_session_ended(self):
-        """A SessionEndedRequest should raise a NotImplementedError"""
-        expected = (NotImplementedError, SESSION_ENDED_NOT_IMPLEMENTED_ERROR)
+        """A SessionEndedRequest should return a 200 OK"""
+        expected = 200
 
         http_request = self._generate_session_ended_request()
-        with self.assertRaisesMessage(*expected):
-            self.skill.dispatch(http_request)
+        response = self.skill.dispatch(http_request)
+        assert response.status_code == expected
 
     def test_get_intent_handler_name(self):
         """get_intent_handler_name should know how to un-camelcase a string"""

@@ -1,6 +1,7 @@
 import logging
 import re
 
+from django import http
 from django.views import generic
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
@@ -31,7 +32,7 @@ class EchoSkill(generic.View):
         raise NotImplementedError(LAUNCH_NOT_IMPLEMENTED_ERROR)
 
     def session_ended(self):
-        raise NotImplementedError(SESSION_ENDED_NOT_IMPLEMENTED_ERROR)
+        return http.HttpResponse()
 
     def intent(self):
         requested_intent = self.request.intent
