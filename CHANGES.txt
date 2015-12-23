@@ -1,3 +1,8 @@
+* 0.2.0
+ - Intent handlers now receive their slots as kwargs.
+ - Added support for card creation.
+ - Moved session handling to request object, to more closely resemble base Django.
+
 * 0.1.2
  - Better default behavior for session_ended.
  - Condensed Response classes into a single EchoResponse class.
