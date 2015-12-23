@@ -5,7 +5,10 @@ from __future__ import unicode_literals
 import json
 
 from echo.response import (
+    create_link_account_card,
+    create_simple_card,
     EchoResponse,
+    LINK_ACCOUNT_CARD,
     PLAIN_TEXT_OUTPUT_TYPE,
     SIMPLE_CARD,
     SSML_OUTPUT_TYPE,
@@ -115,6 +118,21 @@ class TestEchoResponse(BaseEchoTestCase):
         }
         data = self._get_response_data("Content", reprompt=expected['ssml'])
         assert data['response']['reprompt'] == expected
+
+    def test_create_simple_card(self):
+        """The create_simple_card helper should be able to return a valid simple card dictionary"""
+        expected = {
+            "type": SIMPLE_CARD,
+            "title": "Card title",
+            "content": "Some content",
+        }
+
+        assert create_simple_card('Card title', 'Some content') == expected
+
+    def test_create_card_link_account_card(self):
+        """The create_link_account_card helper should be able to return a valid link account card dictionary"""
+        expected = {"type": LINK_ACCOUNT_CARD, }
+        assert create_link_account_card() == expected
 
     def _get_response_data(self, *args, **kwargs):
         response = EchoResponse(*args, **kwargs)

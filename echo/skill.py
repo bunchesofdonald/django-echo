@@ -7,6 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 
 from .request import EchoRequest
+from .response import EchoResponse, create_simple_card, create_link_account_card
 
 
 log = logging.getLogger(__name__)
@@ -41,9 +42,18 @@ class EchoSkill(generic.View):
         handler_kwargs = {}
         for name, slot in requested_intent.get('slots', {}).items():
             name = self.transform_slot_name(name)
-            handler_kwargs[name] = slot['value']
+            handler_kwargs[name] = slot.get('value', None)
 
         return getattr(self, handler_name)(self.request, **handler_kwargs)
+
+    def respond(self, output_speech, **kwargs):
+        return EchoResponse(output_speech, session=self.request.session, **kwargs)
+
+    def create_simple_card(self, title, content):
+        return create_simple_card(title, content)
+
+    def create_link_account_card(self, title, content):
+        return create_link_account_card(title, content)
 
     def get_intent_handler_name(self, intent_name):
         return re.sub('(?!^)([A-Z])', r'_\1', intent_name).lower()

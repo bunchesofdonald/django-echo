@@ -13,6 +13,18 @@ SIMPLE_CARD = 'Simple'
 LINK_ACCOUNT_CARD = 'LinkAccount'
 
 
+def create_simple_card(title, content):
+    return {
+        "type": SIMPLE_CARD,
+        "title": title,
+        "content": content,
+    }
+
+
+def create_link_account_card():
+    return {"type": LINK_ACCOUNT_CARD, }
+
+
 class EchoResponse(http.HttpResponse):
     def __init__(self, output_speech, *args, **kwargs):
         kwargs.setdefault('content_type', 'application/json;charset=UTF-8')

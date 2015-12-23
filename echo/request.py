@@ -24,4 +24,8 @@ class EchoRequest(object):
 
     @property
     def session(self):
-        return self.data['session'].get('attributes', {})
+        attributes = self.data['session'].get('attributes')
+        if attributes is None:
+            attributes = {}
+
+        return attributes

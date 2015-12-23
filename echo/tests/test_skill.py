@@ -7,10 +7,15 @@ from echo.skill import (
 from echo.tests import BaseEchoTestCase
 
 
-class TestEchoSkill(BaseEchoTestCase):
+class TestSkill(EchoSkill):
+    def the_intent(self, request, **kwargs):
+        return self.respond('output speech', should_end_session=False)
+
+
+class EchoSkillTestCase(BaseEchoTestCase):
     def setUp(self):
-        super(TestEchoSkill, self).setUp()
-        self.skill = EchoSkill()
+        super(EchoSkillTestCase, self).setUp()
+        self.skill = TestSkill()
 
     def test_routes_to_launch(self):
         """A LaunchRequest should raise a NotImplementedError"""
@@ -39,7 +44,6 @@ class TestEchoSkill(BaseEchoTestCase):
 
         http_request = self._generate_intent_request(intent_name="TheIntent")
 
-        self.skill.the_intent = None
         with mock.patch.object(self.skill, 'the_intent') as mock_intent:
             self.skill.dispatch(http_request)
             assert mock_intent.call_count == expected
@@ -67,7 +71,41 @@ class TestEchoSkill(BaseEchoTestCase):
             slots=slots
         )
 
-        self.skill.the_intent = None
         with mock.patch.object(self.skill, 'the_intent') as mock_intent:
             self.skill.dispatch(http_request)
             mock_intent.assert_called_once_with(self.skill.request, **expected)
+
+    def test_handles_slots_without_values(self):
+        """An IntenteRequest with unassigned slot values should not cause an error"""
+        expected = {
+            'sign': 'Virgo',
+            'believes_in_horoscopes': None
+        }
+
+        slots = {
+            'Sign': {
+                'name': 'Sign',
+                'value': 'Virgo'
+            },
+            'BelievesInHoroscopes': {}
+        }
+
+        http_request = self._generate_intent_request(
+            intent_name="TheIntent",
+            slots=slots
+        )
+
+        with mock.patch.object(self.skill, 'the_intent') as mock_intent:
+            self.skill.dispatch(http_request)
+            mock_intent.assert_called_once_with(self.skill.request, **expected)
+
+    def test_respond_generates_an_echo_request(self):
+        """The respond mothed should act as a pass-through to EchoRequest"""
+        expected = 'output speech'
+        expected_kwargs = {'should_end_session': False, 'session': {}}
+
+        http_request = self._generate_intent_request(intent_name="TheIntent")
+
+        with mock.patch('echo.skill.EchoResponse') as mock_response:
+            self.skill.dispatch(http_request)
+            mock_response.assert_called_once_with(expected, **expected_kwargs)
