@@ -11,13 +11,13 @@ from .request import EchoRequest
 
 log = logging.getLogger(__name__)
 
-LAUNCH_NOT_IMPLEMENTED_ERROR = "'launch' is not implemented. Implement this handler in a base class."
-SESSION_ENDED_NOT_IMPLEMENTED_ERROR = "'session ended' is not implemented. Implement this handler in a base class."
+LAUNCH_NOT_IMPLEMENTED_ERROR = "'launch' is not implemented. Implement this handler in a subclass."
 
 
 class EchoSkill(generic.View):
     @method_decorator(csrf_exempt)
     def dispatch(self, http_request):
+        self.http_request = http_request
         self.request = EchoRequest(http_request)
 
         handlers = {
@@ -37,10 +37,16 @@ class EchoSkill(generic.View):
     def intent(self):
         requested_intent = self.request.intent
         handler_name = self.get_intent_handler_name(requested_intent['name'])
-        return getattr(self, handler_name)(
-            slots=requested_intent.get('slots', {}),
-            session=self.request.session
-        )
+
+        handler_kwargs = {}
+        for name, slot in requested_intent.get('slots', {}).items():
+            name = self.transform_slot_name(name)
+            handler_kwargs[name] = slot['value']
+
+        return getattr(self, handler_name)(self.request, **handler_kwargs)
 
     def get_intent_handler_name(self, intent_name):
         return re.sub('(?!^)([A-Z])', r'_\1', intent_name).lower()
+
+    def transform_slot_name(self, slot_name):
+        return self.get_intent_handler_name(slot_name)

@@ -15,7 +15,7 @@ setup(
         'Framework :: Django',
         'Natural Language :: English',
     ],
-    description='Library for creating skills for the Amazon Echo',
+    description='Django library for creating skills for the Amazon Echo (Alexa)',
     license='MIT',
     long_description=open('README.rst').read(),
     name='django-echo',

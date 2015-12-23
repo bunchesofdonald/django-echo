@@ -2,7 +2,6 @@ import mock
 
 from echo.skill import (
     LAUNCH_NOT_IMPLEMENTED_ERROR,
-    SESSION_ENDED_NOT_IMPLEMENTED_ERROR,
     EchoSkill,
 )
 from echo.tests import BaseEchoTestCase
@@ -45,27 +44,30 @@ class TestEchoSkill(BaseEchoTestCase):
             self.skill.dispatch(http_request)
             assert mock_intent.call_count == expected
 
-    def test_routes_to_intent_with_session_and_slot_data(self):
-        """A IntentRequest should be routed to the proper intent handler with session and slot data"""
+    def test_routes_to_intent_with_slot_kwargs(self):
+        """A IntentRequest should be routed to the proper intent handler with the request and slot kwargs"""
         expected = {
-            'slots': {
-                'Sign': {
-                    'name': 'Sign',
-                    'value': 'Virgo'
-                }
+            'sign': 'Virgo',
+            'believes_in_horoscopes': False
+        }
+
+        slots = {
+            'Sign': {
+                'name': 'Sign',
+                'value': 'Virgo'
             },
-            'session': {
-                'saved_value': 123
+            'BelievesInHoroscopes': {
+                'name': 'BelievesInHoroscopes',
+                'value': False
             }
         }
 
         http_request = self._generate_intent_request(
             intent_name="TheIntent",
-            slots=expected['slots'],
-            session=expected['session']
+            slots=slots
         )
 
         self.skill.the_intent = None
         with mock.patch.object(self.skill, 'the_intent') as mock_intent:
             self.skill.dispatch(http_request)
-            mock_intent.assert_called_once_with(**expected)
+            mock_intent.assert_called_once_with(self.skill.request, **expected)
