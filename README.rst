@@ -24,7 +24,12 @@ A skill is a class that subclasses EchoSkill that provides intent handlers::
     class HoroscopeSkill(EchoSkill):
         def get_horoscope(self, sign):
             # Ignore the sign because astrology is bunk.
-            return self.respond("Today you need to act first and ask questions later!")
+            return self.respond(
+                "Today you need to act first and ask questions later!",
+                card=None,
+                should_end_session=True
+            )
+
 
 On the Amazon side you would setup an intent called ``GetHoroscope`` that has
 a ``sign`` slot, and when that intent is called this ``get_horoscope`` method
@@ -49,3 +54,32 @@ Then you just need to wire the skill up to your urls.py::
             name='horoscope_skill'
         )
     ]
+
+
+Responding With A Card
+----------------------
+EchoSkill provides a helper to create a simple card::
+
+        return self.respond(
+            "What alexa should say",
+            card=self.create_simple_card("The card title", "The card's content")
+        )
+
+
+Session Handling
+----------------
+EchoSkill sets ``self.request`` to an instance of EchoRequest (it also saves
+the http request to ``self.http_request``.) EchoRequest provides the session
+attributes via a ``session`` attribute::
+
+    sign = self.request.session.get('sign')
+
+    request.session.update({
+        'has_requested_horoscope': True
+    })
+
+If you use ``EchoSkill.respond`` this session data will be automatically
+attached to the response, otherwise you'll need to pass it when creating the
+response::
+
+        return EchoResponse("Output text", session=self.request.session)
