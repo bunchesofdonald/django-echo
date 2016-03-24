@@ -14,6 +14,12 @@ class EchoRequest(object):
         self.data = json.loads(http_request.body)
         log.debug(self.data)
 
+        attributes = self.data['session'].get('attributes')
+        if attributes is None:
+            attributes = {}
+
+        self.session = attributes
+
     @property
     def type(self):
         return self.data['request']['type']
@@ -22,10 +28,3 @@ class EchoRequest(object):
     def intent(self):
         return self.data['request']['intent']
 
-    @property
-    def session(self):
-        attributes = self.data['session'].get('attributes')
-        if attributes is None:
-            attributes = {}
-
-        return attributes
