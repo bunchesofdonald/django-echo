@@ -22,7 +22,7 @@ A skill is a class that subclasses EchoSkill that provides intent handlers::
     from echo.skill import EchoSkill
 
     class HoroscopeSkill(EchoSkill):
-        def get_horoscope(self, sign):
+        def get_horoscope(self, request, sign):
             # Ignore the sign because astrology is bunk.
             return self.respond(
                 "Today you need to act first and ask questions later!",
