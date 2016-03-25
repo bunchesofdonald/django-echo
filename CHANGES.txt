@@ -1,3 +1,6 @@
+* 0.2.1
+ - Fix issue that caused an empty session to not be able to be updated.
+
 * 0.2.0
  - Intent handlers now receive their slots as kwargs.
  - Added support for card creation.
