@@ -27,4 +27,3 @@ class EchoRequest(object):
     @property
     def intent(self):
         return self.data['request']['intent']
-

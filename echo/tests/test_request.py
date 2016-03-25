@@ -37,3 +37,11 @@ class TestEchoRequest(BaseEchoTestCase):
         http_request = self._generate_intent_request(session=expected)
         request = EchoRequest(http_request)
         assert request.session == expected
+
+    def test_can_update_session_attributes(self):
+        """EchoRequest should allow you to update the session attributes"""
+        expected = {'key': 'another_value'}
+        http_request = self._generate_intent_request()
+        request = EchoRequest(http_request)
+        request.session.update(expected)
+        assert request.session == expected
