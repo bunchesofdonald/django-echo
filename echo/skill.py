@@ -33,7 +33,12 @@ class EchoSkill(generic.View):
         raise NotImplementedError(LAUNCH_NOT_IMPLEMENTED_ERROR)
 
     def session_ended(self):
-        return http.HttpResponse()
+        self.end_session(self.request)
+        return http.HttpResponse('{}')
+
+    def end_session(self, request):
+        """Placeholder method, override in a subclass"""
+        pass
 
     def intent(self):
         requested_intent = self.request.intent

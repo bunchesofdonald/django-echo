@@ -1,3 +1,7 @@
+* 0.2.2
+ - Make default SessionEnded handler return a valid response.
+ - Add an overrideable `end_session` method for easy tear-down.
+
 * 0.2.1
  - Fix issue that caused an empty session to not be able to be updated.
 

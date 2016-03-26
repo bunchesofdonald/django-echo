@@ -33,6 +33,21 @@ class EchoSkillTestCase(BaseEchoTestCase):
         response = self.skill.dispatch(http_request)
         assert response.status_code == expected
 
+    def test_session_ended_returns_empty_json_object(self):
+        """A SessionEndedRequest should return an empty JSON object"""
+        expected = '{}'
+
+        http_request = self._generate_session_ended_request()
+        response = self.skill.dispatch(http_request)
+        assert response.content == expected
+
+    def test_session_ended_calls_end_session_method(self):
+        """A SessionEndedRequest should call the end_session method"""
+        with mock.patch.object(self.skill, 'end_session') as mock_end_session:
+            http_request = self._generate_session_ended_request()
+            self.skill.dispatch(http_request)
+            mock_end_session.assert_called_once_with(self.skill.request)
+
     def test_get_intent_handler_name(self):
         """get_intent_handler_name should know how to un-camelcase a string"""
         expected = "this_is_a_camel_cased_string"
